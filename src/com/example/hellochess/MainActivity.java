@@ -32,36 +32,11 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		TextView[][] textViews = new TextView[8][8];
-		
-		OnClickListener ocl = new OnClickListener() {
-			public void onClick(View v){
-				view.processTouch((TextView) v);
-			}
-		};
-		
 		GridLayout gl = (GridLayout) findViewById(R.id.GridLayout1);
-	    
-		int tileLength = 40;
-		
-		for (int y = 0; y < 8; y++){
-			for (int x = 0; x < 8; x++){
-				TextView tv = new TextView(this);
-				tv.setBackgroundColor(Color.BLUE);
-				tv.setOnClickListener(ocl);
-				tv.setText(x + "" + y);
-				tv.setWidth(tileLength);
-				tv.setHeight(tileLength);
-				tv.setGravity(Gravity.CENTER);
-				tv.setTextSize(25);
-				textViews[x][y] = tv;
-				gl.addView(tv);
-			}
-		}
 		
 		Game game = new Game();
 		Controller controller = new Controller(game, null);
-		view = new AndroidView(controller, this, textViews);
+		view = new AndroidView(controller, this, gl);
 		controller.view = view;
 		
 		
