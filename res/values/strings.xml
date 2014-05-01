@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HelloChess</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="bR">♜</string>
+    <string name="bN">♞</string>
+    <string name="bB">♝</string>
+    <string name="bQ">♛</string>
+    <string name="bK">♚</string>
+    <string name="bp">♟</string>
+    <string name="blank_spot"></string>
+    <string name="wR">♖</string>
+    <string name="wN">♘</string>
+    <string name="wB">♗</string>
+    <string name="wQ">♕</string>
+    <string name="wK">♔</string>
+    <string name="wp">♙</string>
+
+</resources>
