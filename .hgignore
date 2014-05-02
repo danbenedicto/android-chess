@@ -1,2 +1,6 @@
 syntax: glob
-bin
+bin/
+gen/
+*.apk
+*.ap_
+*.class
