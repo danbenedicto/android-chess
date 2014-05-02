@@ -1,11 +1,7 @@
 package controller;
 
-import java.util.ArrayList;
-
-import android.widget.Toast;
 import model.ChessPiece;
 import model.Game;
-import model.Player;
 import model.Square;
 import view.AndroidView;
 
@@ -18,101 +14,72 @@ public class Controller {
 	
 	public Game game;
 	public AndroidView view;
-	private boolean offerToDraw = false;
-	private Player player;
+	
 	private Square selected;
 	
 	public Controller(Game game, AndroidView view){
 		this.game = game;
-		this.player = game.white;
 		this.view = view;
 	}
 	
-	public void processMove(String... tokens){
-		if (tokens.length < 2){
-			if (tokens.length == 1 &&
-					(tokens[0].equalsIgnoreCase("resign") ||
-							(offerToDraw && (tokens[0].equalsIgnoreCase("draws") || tokens[0].equalsIgnoreCase("draw"))))){
-				return;	// game over
-			}
-			view.printIllegal();
-			view.getMove(player);	// ask again
+	/**
+	 * Handles click events from the view and incorporates them in the context of the chess game.
+	 * Might prepares a piece to be moved, or execute a chess move. 
+	 * @param clickedSquare
+	 */
+	public void processTouch(Square clickedSquare){
+		
+		if (selected == null && clickedSquare.chessPiece != null && clickedSquare.chessPiece.player == game.currentPlayer){
+			// the player is preparing to move the piece at this square (destination is given by the next touch if valid)
+			
+			selected = clickedSquare;	// remember it
+			view.printBoard();
+			view.highlight(selected);	// let the view highlight it
 			return;
+		
 		}
 		
-		Square from = getSquare(tokens[0]);
-		Square to = getSquare(tokens[1]);
-		
-		if (from == null || to == null || (tokens.length == 3 && !tokens[2].equalsIgnoreCase("draw?")) || !player.move(from, to)){
-			view.printIllegal();
-			view.getMove(player);
-			return;
-		}
-		
-		offerToDraw = tokens.length == 3 && tokens[2].equalsIgnoreCase("draw?");
-		view.printBoard();
-		
-		if (player.opponent.king.isInCheck()){
-			view.printCheck();
-		}
-		
-		player = player.opponent;
-		autoMove();
-		view.getMove(player);
-	}
-	
-	public void processTouch(Square square){
-		if (selected == null){
-			if (square.chessPiece != null){
-				selected = square;
-			} else {
-				selected = null;
-			}
-		} else {
-			if (player.move(selected, square)){
-				player = player.opponent;
-				if (player.king.isInCheck()){
-					Toast toast = Toast.makeText(view.activity.getApplicationContext(), "ayy", Toast.LENGTH_SHORT);
-					toast.show();
+		if (selected != null){
+			
+			// something was already selected before this, so this is an attempt at moving a piece
+			
+			if (game.currentPlayer.move(selected, clickedSquare)){
+				// successful!
+				game.currentPlayer = game.currentPlayer.opponent;	// change turns
+				
+				if (game.currentPlayer.king.isInCheck()){
+					view.printCheck();
 				}
+				
+			} else {
+				// anything here will execute when an attempted move is invalid
 			}
-			selected = null; 
+			
+			selected = null;	// clear selection whether the move was successful or not 
 		}
 		
 		view.printBoard();
-		if (selected != null) {
-			view.highlight(selected);
-		}
 	}
 	
+	/**
+	 * Attempts to make a move for the player whose turn it is.
+	 */
 	public void autoMove(){
-		for (ChessPiece cp : player.pieces){
+		
+		// to do: make this more random
+		
+		for (ChessPiece cp : game.currentPlayer.pieces){
 			for (Square[] row : game.board){
 				for (Square square : row){
-					if (cp.loc != null && player.move(cp.loc, square)){
+					if (cp.loc != null && game.currentPlayer.move(cp.loc, square)){
 						view.printBoard();
-						player = player.opponent;
+						game.currentPlayer = game.currentPlayer.opponent;
 						return;
 					}
 				}
 			}
 		}
-	}
-	
-	private Square getSquare(String algebraic){
-		if (algebraic.length() != 2){
-			return null;
-		}
-		char file = algebraic.toLowerCase().charAt(0);
-		char rank = algebraic.charAt(1);
-		if (file < 'a' || file > 'h' || rank < '1' || rank > '8'){
-			return null;
-		}
 		
-		int x = file - 97;
-		int y = 8 - (rank - 48);
-		
-		return game.board[x][y];
+		// no moves!
 	}
-	
 }

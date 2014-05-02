@@ -6,11 +6,14 @@ import java.util.HashMap;
 import model.Game;
 import model.Square;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hellochess.MainActivity;
 
@@ -23,52 +26,70 @@ import controller.Controller;
  */
 public class AndroidView {
 	
-	private Controller controller;
+	private static final int boardColor1 = Color.parseColor("#FAEBD7");		// bisque
+	private static final int boardColor2 = Color.parseColor("#CD853F");		// sandy brown
+	private static final int hintColor = Color.GREEN;
+	private static final int selectedColor = Color.CYAN;
+	
+	public Controller controller;
 	public MainActivity activity;
+	
 	private TextView[][] textViews;
 	private Game game;
 	private HashMap<TextView, Square> viewSquares;
 	private HashMap<Square, TextView> squareViews;
 	
-	public AndroidView(Controller controller, MainActivity activity, GridLayout gridLayout){
-		this.controller = controller;
+	/**
+	 * Creates an AndroidView object that creates a visual experience for a chess game.
+	 * Populates the given GridLayout with 64 text views, each representing a square on a chess board.
+	 * @param activity The android activity where the GridLayout exists.
+	 * @param controller The controller related to this object.
+	 * @param gridLayout The GridLayout to fill with TextViews	
+	 */
+	public AndroidView(MainActivity activity, Controller controller, Game game, GridLayout boardGridLayout){
 		this.activity = activity;
+		this.controller = controller;		
+		this.game = game;
 		
-		this.game = controller.game;
 		this.textViews = new TextView[8][8];
 		
 		this.viewSquares = new HashMap<TextView, Square>();
 		this.squareViews = new HashMap<Square, TextView>();
 		
+		// an OnClickListener that all views will share
 		OnClickListener ocl = new OnClickListener() {
 			public void onClick(View v){
 				processTouch((TextView) v);
 			}
 		};
 		
+		Display display = activity.getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		
+		// make all the views		
 		for (int y = 0; y < 8; y++){
 			for (int x = 0; x < 8; x++){
+				// create a new TextView instance
 				TextView tv = new TextView(activity);
 				tv.setOnClickListener(ocl);
-				tv.setText(x + "" + y);
-				tv.setWidth(40);
-				tv.setHeight(40);
 				tv.setGravity(Gravity.CENTER);
-				tv.setTextSize(25);
+				tv.setTextSize(26);
 				textViews[x][y] = tv;
-				gridLayout.addView(tv);
 				
+				// add it to the GridLayout with a LayoutParams object
+				GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+				lp.width = width / 8;
+				lp.height = lp.width;
+				lp.setGravity(Gravity.CENTER_HORIZONTAL);
+				boardGridLayout.addView(tv, lp);
+				
+				// store it in our HashMaps
 				viewSquares.put(textViews[x][y], game.board[x][y]);
 				squareViews.put(game.board[x][y], textViews[x][y]);
 			}
 		}
-	}
-	
-	/**
-	 * Migrated from CmdView chess - asked a certain player for a move. Not necessary, but could be used to display current player.
-	 */
-	public void getMove(){
-		
 	}
 	
 	/**
@@ -98,10 +119,10 @@ public class AndroidView {
 				
 				// color the board (un-highlight any highlighted squares)
 				if ((x + y) % 2 == 0){
-					textViews[x][y].setBackgroundColor(Color.parseColor("#FFFF00"));
+					textViews[x][y].setBackgroundColor(boardColor1);
 				}
 				else {
-					textViews[x][y].setBackgroundColor(Color.parseColor("#FF0000"));
+					textViews[x][y].setBackgroundColor(boardColor2);
 				}
 			}
 		}
@@ -113,7 +134,7 @@ public class AndroidView {
 	 */
 	public void hintAt(Collection<Square> squares){
 		for (Square s : squares){
-			squareViews.get(s).setBackgroundColor(Color.MAGENTA);
+			squareViews.get(s).setBackgroundColor(hintColor);
 		}
 	}
 	
@@ -122,7 +143,7 @@ public class AndroidView {
 	 * @param selected
 	 */
 	public void highlight(Square selected){
-		squareViews.get(selected).setBackgroundColor(Color.GREEN);
+		squareViews.get(selected).setBackgroundColor(selectedColor);
 	}
 	
 	/**
@@ -136,6 +157,7 @@ public class AndroidView {
 	 * Does something (perhaps makes a Toast) when a player is put in check.
 	 */
 	public void printCheck(){
-		// to-do
+		Toast toast = Toast.makeText(activity.getApplicationContext(), "ayy", Toast.LENGTH_SHORT);
+		toast.show();
 	}
 }
