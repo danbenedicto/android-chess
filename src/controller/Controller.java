@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import model.ChessPiece;
 import model.Game;
 import model.Square;
@@ -38,6 +41,7 @@ public class Controller {
 			selected = clickedSquare;	// remember it
 			view.printBoard();
 			view.highlight(selected);	// let the view highlight it
+			view.hintAt(getPossibleMoves(selected.chessPiece));
 			return;
 		
 		}
@@ -85,6 +89,20 @@ public class Controller {
 		}
 		
 		// no moves!
+	}
+	
+	public List<Square> getPossibleMoves(ChessPiece cp){
+		ArrayList<Square> result = new ArrayList<Square>();
+		
+		for (Square[] row : game.board){
+			for (Square square : row){
+				if (cp.canMoveTo(square, false)){
+					result.add(square);
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	public void undoMove(){
