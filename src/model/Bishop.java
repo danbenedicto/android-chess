@@ -8,7 +8,7 @@ package model;
  */
 public class Bishop extends ChessPiece {
 	@Override
-	public boolean canMoveTo(Square to) {
+	public boolean canMoveToHook(Square to) {
 		if (Math.abs(to.x - loc.x) != Math.abs(to.y - loc.y)) {
 			return false;	// not diagonal with bishop
 		}

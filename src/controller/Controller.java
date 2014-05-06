@@ -43,7 +43,7 @@ public class Controller {
 			
 			// something was already selected before this, so this is an attempt at moving a piece
 			
-			if (game.currentPlayer.move(selected, clickedSquare)){
+			if (game.currentPlayer.move(selected, clickedSquare, true)){
 				// successful!
 				game.currentPlayer = game.currentPlayer.opponent;	// change turns
 				
@@ -71,7 +71,7 @@ public class Controller {
 		for (ChessPiece cp : game.currentPlayer.pieces){
 			for (Square[] row : game.board){
 				for (Square square : row){
-					if (cp.loc != null && game.currentPlayer.move(cp.loc, square)){
+					if (cp.loc != null && game.currentPlayer.move(cp.loc, square, true)){
 						view.printBoard();
 						game.currentPlayer = game.currentPlayer.opponent;
 						return;

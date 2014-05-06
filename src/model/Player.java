@@ -20,14 +20,14 @@ public class Player {
 		pieces = new ArrayList<ChessPiece>();
 	}
 	
-	public boolean move(Square from, Square to){
+	public boolean move(Square from, Square to, boolean commit){
 		ChessPiece cp = from.chessPiece;
 		
 		if (cp == null || cp.player != this){
 			return false;	// not moving one of his pieces
 		}
 		
-		return cp.tryMoveTo(to);		
+		return cp.canMoveTo(to, commit);
 	}
 	
 	public String toString(){

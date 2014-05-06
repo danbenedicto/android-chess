@@ -8,7 +8,7 @@ package model;
 public class Queen extends ChessPiece {
 
 	@Override
-	public boolean canMoveTo(Square to) {
+	public boolean canMoveToHook(Square to) {
 		if (loc.x == to.x || loc.y == to.y || (Math.abs(to.x - loc.x) == Math.abs(to.y - loc.y))){
 			return this.hasClearPathTo(to);
 		}

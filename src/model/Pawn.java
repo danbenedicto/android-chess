@@ -1,5 +1,6 @@
 package model;
 
+
 /**
  * 
  * @author Dan Benedicto
@@ -8,7 +9,7 @@ package model;
 public class Pawn extends ChessPiece {
 
 	@Override
-	public boolean canMoveTo(Square to) {
+	public boolean canMoveToHook(Square to) {
 		int dy = (player.color == PlayerColor.BLACK) ? 1 : -1;
 		if (loc.x == to.x){
 			// trying to move vertically
@@ -31,14 +32,14 @@ public class Pawn extends ChessPiece {
 	}
 
 	@Override
-	public boolean tryMoveTo(Square to){
+	public boolean canMoveTo(Square to, boolean commit){
 		// override for en passant
 
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
 			return false;
 		}
 		
-		if (!canMoveTo(to)){
+		if (!canMoveToHook(to)){
 			return false;
 		}
 		
@@ -52,25 +53,30 @@ public class Pawn extends ChessPiece {
 		to.chessPiece = this;
 		this.loc = to;
 		
-		if (player.king.isInCheck()){
+		boolean inCheck = player.king.isInCheck();
+		
+		if (inCheck || !commit){
 			// move would leave king in check, so invalid. restore old state
 			to.chessPiece = tempPiece;
 			if (tempPiece != null) to.chessPiece.loc = to;
 			loc = oldLoc;
 			loc.chessPiece = this;
-			return false;
+			if (inCheck){
+				return false;
+			}
 		}
 		
-		if (tempPiece == null){
+		if (commit && tempPiece == null){
 			if (Math.abs(to.x - oldLoc.x) == 1){
-				System.out.println("En passant!!");
 				// must be en passant if no chess piece on target but canMoveTo() returned true
 				board[to.x][oldLoc.y].chessPiece.loc = null;
 				board[to.x][oldLoc.y].chessPiece = null; 
 			}
 		}
 
-		moves++;
+		if (commit){
+			moves++;
+		}
 		
 		if ((player.color == PlayerColor.WHITE && loc.y == 0) || (player.color == PlayerColor.BLACK && loc.y == 7)){
 			// promote to queen

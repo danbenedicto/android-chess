@@ -7,7 +7,7 @@ package model;
  */
 public class Rook extends ChessPiece {
 	@Override
-	public boolean canMoveTo(Square to) {
+	public boolean canMoveToHook(Square to) {
 		if (loc.x != to.x && loc.y != loc.y) { 
 			return false;	// not horizontal or vertical with rook
 		}

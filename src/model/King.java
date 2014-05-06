@@ -7,7 +7,7 @@ package model;
  */
 public class King extends ChessPiece {
 	@Override
-	public boolean canMoveTo(Square to) {
+	public boolean canMoveToHook(Square to) {
 		if (Math.abs(to.x - loc.x) <= 1 && Math.abs(to.y - loc.y) <= 1){
 			return true;
 		}
@@ -36,12 +36,12 @@ public class King extends ChessPiece {
 	}
 
 	@Override
-	public boolean tryMoveTo(Square to) {
+	public boolean canMoveTo(Square to, boolean commit) {
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
 			return false;
 		}
 		
-		if (!canMoveTo(to)){
+		if (!canMoveToHook(to)){
 			return false;
 		}
 		
@@ -74,7 +74,9 @@ public class King extends ChessPiece {
 			board[oldRookX][loc.y].chessPiece = null;
 		}
 		
-		if (isInCheck()){
+		boolean inCheck = isInCheck();
+		
+		if (inCheck || !commit){
 			// move would leave king in check, so invalid. restore old state
 			to.chessPiece = tempPiece;
 			if (tempPiece != null) to.chessPiece.loc = to;
@@ -85,12 +87,17 @@ public class King extends ChessPiece {
 				board[oldRookX][loc.y].chessPiece.loc = board[oldRookX][loc.y];
 				board[newRookX][loc.y].chessPiece = null;
 			}
-			return false;
+			
+			if (inCheck){
+				return false;
+			}
 		}
 		
 		// valid
-
-		moves++;
+		
+		if (commit){
+			moves++;
+		}
 		
 		return true;
 	}
@@ -108,7 +115,7 @@ public class King extends ChessPiece {
 	
 	public boolean isInCheck(){
 		for (ChessPiece cp : player.opponent.pieces){
-			if (cp.loc != null && cp.canMoveTo(this.loc)){
+			if (cp.loc != null && cp.canMoveToHook(this.loc)){
 				return true;
 			}
 		}

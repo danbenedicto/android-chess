@@ -19,16 +19,16 @@ public abstract class ChessPiece {
 		moves = 0;
 	}
 	
-	public abstract boolean canMoveTo(Square to);
+	public abstract boolean canMoveToHook(Square to);
 	
 	protected abstract String getInitial();
 	
-	public boolean tryMoveTo(Square to){
+	public boolean canMoveTo(Square to, boolean commit){
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
 			return false;
 		}
 		
-		if (!canMoveTo(to)){
+		if (!canMoveToHook(to)){
 			return false;
 		}
 		
@@ -52,12 +52,19 @@ public abstract class ChessPiece {
 		}
 		
 		// valid
-
-		moves++;
+		
+		if (commit){
+			moves++;
+		} else {
+			to.chessPiece = tempPiece;
+			if (tempPiece != null) to.chessPiece.loc = to;
+			loc = oldLoc;
+			loc.chessPiece = this;
+		}
 		
 		return true;
 	}
-	
+		
 	protected boolean hasClearPathTo(Square to){
 		
 		if (loc.x == to.x && loc.y != to.y){
