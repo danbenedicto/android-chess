@@ -22,5 +22,5 @@ public class Rook extends ChessPiece {
 	@Override
 	public String getInitial() {
 		return "R";
-	}	
+	}
 }
