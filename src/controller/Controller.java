@@ -16,6 +16,9 @@ public class Controller {
 	public AndroidView view;
 	
 	private Square selected;
+	Square original;
+	Square destination;
+	
 	
 	public Controller(Game game, AndroidView view){
 		this.game = game;
@@ -42,7 +45,8 @@ public class Controller {
 		if (selected != null){
 			
 			// something was already selected before this, so this is an attempt at moving a piece
-			
+			original = selected;
+			destination = clickedSquare;
 			if (game.currentPlayer.move(selected, clickedSquare, true)){
 				// successful!
 				game.currentPlayer = game.currentPlayer.opponent;	// change turns
@@ -81,5 +85,10 @@ public class Controller {
 		}
 		
 		// no moves!
+	}
+	
+	public void undoMove(){
+		original.chessPiece=destination.chessPiece;
+		destination.chessPiece=original.chessPiece;		
 	}
 }
