@@ -1,7 +1,6 @@
 syntax: glob
 bin/
 gen/
-libs/
 *.apk
 *.ap_
 *.class
