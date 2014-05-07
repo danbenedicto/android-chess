@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Dan Benedicto
@@ -11,6 +14,7 @@ public class Game {
 	public Player white;
 	public Player black;
 	public Player currentPlayer;
+	public List<Move> moves;
 	
 	/**
 	 * Creates a Game object with a board containing chess pieces, a white and a black player, and current player equal to white.
@@ -22,6 +26,8 @@ public class Game {
 		this.white.opponent = black;
 		this.black.opponent = white;
 		this.currentPlayer = white;	// white goes first
+		
+		moves = new ArrayList<Move>();
 		
 		// initialize the board with piece-less squares
 		for (int r = 0; r < 8; r++){

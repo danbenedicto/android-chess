@@ -5,6 +5,7 @@ import java.util.List;
 
 import model.ChessPiece;
 import model.Game;
+import model.Move;
 import model.Square;
 import view.AndroidView;
 
@@ -55,8 +56,11 @@ public class Controller {
 			destination = clickedSquare;
 			destinationPiece = clickedSquare.chessPiece;
 			
-			if (game.currentPlayer == selected.player && selected.tryMoveTo(clickedSquare) != null){
+			Move move;
+			
+			if (game.currentPlayer == selected.player && (move = selected.tryMoveTo(clickedSquare)) != null){
 				// successful!
+				game.moves.add(move);	// record the move
 				game.currentPlayer = game.currentPlayer.opponent;	// change turns
 				
 				if (game.currentPlayer.king.isInCheck()){
@@ -111,10 +115,40 @@ public class Controller {
 	}
 	
 	public void undoMove(){
-		original.chessPiece=destination.chessPiece;
-		destination.chessPiece = destinationPiece;
-		original.chessPiece.loc = original;
+		if (game.moves.size() == 0) return;
+		
+		Move move = game.moves.remove(game.moves.size() - 1);	// get the most recent move
+		
+		if (move.type == Move.Type.NORMAL){
+			move.destination.chessPiece = move.capture;
+			if (move.capture != null) move.capture.loc = move.destination;
+			
+			move.chessPiece.moves--;
+			move.chessPiece.loc = move.source;
+			move.source.chessPiece = move.chessPiece;
+		} else if (move.type == Move.Type.CASTLE){
+			move.destination.chessPiece = null;
+			move.chessPiece.loc = move.source;
+			move.source.chessPiece = move.chessPiece;
+			move.chessPiece.moves--;
+			
+			Square rookFrom, rookTo;
+			
+			if (move.destination.x == 6){
+				rookFrom = game.board[7][move.source.y];
+				rookTo = game.board[5][move.source.y];
+			} else {
+				rookFrom = game.board[0][move.source.y];
+				rookTo = game.board[2][move.source.y];
+			}
+			
+			rookFrom.chessPiece = rookTo.chessPiece;
+			rookFrom.chessPiece.loc = rookFrom;
+			rookTo.chessPiece = null;
+		}
+		
 		game.currentPlayer = game.currentPlayer.opponent;
+		
 		view.printBoard();
 	}
 }

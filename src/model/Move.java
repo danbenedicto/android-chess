@@ -6,11 +6,11 @@ public class Move {
 		NORMAL, CASTLE, ENPASSANT
 	}
 	
-	ChessPiece chessPiece;
-	ChessPiece capture;
-	Square source;
-	Square destination;
-	Type type;
+	public ChessPiece chessPiece;
+	public ChessPiece capture;
+	public Square source;
+	public Square destination;
+	public Type type;
 	
 	public Move(ChessPiece chessPiece, ChessPiece capture, Square source, Square destination) {
 		this.chessPiece = chessPiece;

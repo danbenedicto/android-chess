@@ -13,7 +13,7 @@ public abstract class ChessPiece {
 	
 	public Player player;
 	
-	protected int moves; // useful for validating pawn moves and for castling
+	public int moves; // useful for validating pawn moves and for castling
 	
 	public ChessPiece(){
 		moves = 0;
