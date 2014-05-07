@@ -19,12 +19,7 @@ public class Controller {
 	public Game game;
 	public AndroidView view;
 	
-	private ChessPiece selected;
-	Square original;
-	Square destination;
-	
-	ChessPiece destinationPiece;
-	
+	private ChessPiece selected;	
 	
 	public Controller(Game game, AndroidView view){
 		this.game = game;
@@ -52,9 +47,6 @@ public class Controller {
 		if (selected != null){
 			
 			// something was already selected before this, so this is an attempt at moving a piece
-			original = selected.loc;
-			destination = clickedSquare;
-			destinationPiece = clickedSquare.chessPiece;
 			
 			Move move;
 			
