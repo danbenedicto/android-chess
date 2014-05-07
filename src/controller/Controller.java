@@ -18,7 +18,7 @@ public class Controller {
 	public Game game;
 	public AndroidView view;
 	
-	private Square selected;
+	private ChessPiece selected;
 	Square original;
 	Square destination;
 	
@@ -40,10 +40,10 @@ public class Controller {
 		if (selected == null && clickedSquare.chessPiece != null && clickedSquare.chessPiece.player == game.currentPlayer){
 			// the player is preparing to move the piece at this square (destination is given by the next touch if valid)
 			
-			selected = clickedSquare;	// remember it
+			selected = clickedSquare.chessPiece;	// remember it
 			view.printBoard();
-			view.highlight(selected);	// let the view highlight it
-			view.hintAt(getPossibleMoves(selected.chessPiece));
+			view.highlight(clickedSquare);	// let the view highlight it
+			view.hintAt(getPossibleMoves(selected));
 			return;
 		
 		}
@@ -51,11 +51,11 @@ public class Controller {
 		if (selected != null){
 			
 			// something was already selected before this, so this is an attempt at moving a piece
-			original = selected;
+			original = selected.loc;
 			destination = clickedSquare;
 			destinationPiece = clickedSquare.chessPiece;
 			
-			if (game.currentPlayer.move(selected, clickedSquare, true)){
+			if (game.currentPlayer == selected.player && selected.tryMoveTo(clickedSquare)){
 				// successful!
 				game.currentPlayer = game.currentPlayer.opponent;	// change turns
 				
@@ -81,9 +81,10 @@ public class Controller {
 		// to do: make this more random
 		
 		for (ChessPiece cp : game.currentPlayer.pieces){
+			if (cp.loc == null) continue; 
 			for (Square[] row : game.board){
 				for (Square square : row){
-					if (cp.loc != null && game.currentPlayer.move(cp.loc, square, true)){
+					if (cp.tryMoveTo(square)){
 						view.printBoard();
 						game.currentPlayer = game.currentPlayer.opponent;
 						return;
@@ -100,7 +101,7 @@ public class Controller {
 		
 		for (Square[] row : game.board){
 			for (Square square : row){
-				if (cp.canMoveTo(square, false)){
+				if (cp.canMoveTo(square)){
 					result.add(square);
 				}
 			}

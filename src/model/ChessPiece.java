@@ -23,7 +23,7 @@ public abstract class ChessPiece {
 	
 	protected abstract String getInitial();
 	
-	public boolean canMoveTo(Square to, boolean commit){
+	protected boolean canMoveTo(Square to, boolean commit){
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
 			return false;
 		}
@@ -65,6 +65,14 @@ public abstract class ChessPiece {
 		return true;
 	}
 		
+	public boolean canMoveTo(Square to){
+		return canMoveTo(to, false);
+	}
+	
+	public boolean tryMoveTo(Square to){
+		return canMoveTo(to, true);
+	}
+	
 	protected boolean hasClearPathTo(Square to){
 		
 		if (loc.x == to.x && loc.y != to.y){
