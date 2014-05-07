@@ -119,18 +119,17 @@ public class Controller {
 		
 		Move move = game.moves.remove(game.moves.size() - 1);	// get the most recent move
 		
+		move.chessPiece.moves--;
+		move.chessPiece.loc = move.source;
+		move.source.chessPiece = move.chessPiece;
+		
 		if (move.type == Move.Type.NORMAL){
 			move.destination.chessPiece = move.capture;
-			if (move.capture != null) move.capture.loc = move.destination;
-			
-			move.chessPiece.moves--;
-			move.chessPiece.loc = move.source;
-			move.source.chessPiece = move.chessPiece;
+			if (move.capture != null){
+				move.capture.loc = move.destination;
+			}
 		} else if (move.type == Move.Type.CASTLE){
 			move.destination.chessPiece = null;
-			move.chessPiece.loc = move.source;
-			move.source.chessPiece = move.chessPiece;
-			move.chessPiece.moves--;
 			
 			Square rookFrom, rookTo;
 			
@@ -145,6 +144,11 @@ public class Controller {
 			rookFrom.chessPiece = rookTo.chessPiece;
 			rookFrom.chessPiece.loc = rookFrom;
 			rookTo.chessPiece = null;
+		} else if (move.type == Move.Type.ENPASSANT){			
+			move.destination.chessPiece = null;
+			
+			game.board[move.destination.x][move.source.y].chessPiece = move.capture;
+			move.capture.loc = game.board[move.destination.x][move.source.y];
 		}
 		
 		game.currentPlayer = game.currentPlayer.opponent;
