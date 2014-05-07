@@ -32,23 +32,23 @@ public class Pawn extends ChessPiece {
 	}
 
 	@Override
-	public boolean canMoveTo(Square to, boolean commit){
+	public Move canMoveTo(Square to, boolean commit){
 		// override for en passant
 
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
-			return false;
+			return null;
 		}
 		
 		if (!canMoveToHook(to)){
-			return false;
+			return null;
 		}
 		
 		// temporarily move to see if king is safe
-		Square oldLoc = this.loc;
-		oldLoc.chessPiece = null;
+		Square from = this.loc;
+		from.chessPiece = null;
 		
-		ChessPiece tempPiece = to.chessPiece;
-		if (tempPiece != null) tempPiece.loc = null;	// consider any "to" piece killed
+		ChessPiece capture = to.chessPiece;
+		if (capture != null) capture.loc = null;	// consider any "to" piece killed
 		
 		to.chessPiece = this;
 		this.loc = to;
@@ -57,21 +57,23 @@ public class Pawn extends ChessPiece {
 		
 		if (inCheck || !commit){
 			// move would leave king in check, so invalid. restore old state
-			to.chessPiece = tempPiece;
-			if (tempPiece != null) to.chessPiece.loc = to;
-			loc = oldLoc;
+			to.chessPiece = capture;
+			if (capture != null) to.chessPiece.loc = to;
+			loc = from;
 			loc.chessPiece = this;
 			if (inCheck){
-				return false;
+				return null;
 			}
 		}
 		
-		if (commit && tempPiece == null){
-			if (Math.abs(to.x - oldLoc.x) == 1){
-				// must be en passant if no chess piece on target but canMoveTo() returned true
-				board[to.x][oldLoc.y].chessPiece.loc = null;
-				board[to.x][oldLoc.y].chessPiece = null; 
-			}
+		// must be true if canMoveTo() returned true
+		boolean enPassant = (capture == null && to.x != from.x); 
+		
+		if (commit && enPassant){
+			// must be en passant if no chess piece on target but canMoveTo() returned true
+			capture = board[to.x][from.y].chessPiece;
+			capture.loc = null;
+			board[to.x][from.y].chessPiece = null;
 		}
 
 		if (commit){
@@ -89,7 +91,11 @@ public class Pawn extends ChessPiece {
 			player.pieces.add(q);
 		}
 		
-		return true;
+		if (enPassant){
+			return new Move(this, capture, from, to, Move.Type.ENPASSANT);
+		} else {
+			return new Move(this, capture, from, to);
+		}
 	}
 	
 	@Override

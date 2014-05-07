@@ -23,53 +23,50 @@ public abstract class ChessPiece {
 	
 	protected abstract String getInitial();
 	
-	protected boolean canMoveTo(Square to, boolean commit){
+	protected Move canMoveTo(Square to, boolean commit){
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
-			return false;
+			return null;
 		}
 		
 		if (!canMoveToHook(to)){
-			return false;
+			return null;
 		}
 		
 		// temporarily move to see if king is safe
-		Square oldLoc = this.loc;
-		oldLoc.chessPiece = null;
+		Square from = this.loc;
+		from.chessPiece = null;
 		
-		ChessPiece tempPiece = to.chessPiece;
-		if (tempPiece != null) tempPiece.loc = null;	// consider any "to" piece killed
+		ChessPiece capture = to.chessPiece;
+		if (capture != null) capture.loc = null;	// consider any "to" piece killed
 		
 		to.chessPiece = this;
 		this.loc = to;
 		
-		if (player.king.isInCheck()){
+		if (player.king.isInCheck() || !commit){
 			// move would leave king in check, so invalid. restore old state
-			to.chessPiece = tempPiece;
-			if (tempPiece != null) to.chessPiece.loc = to;
-			loc = oldLoc;
+			to.chessPiece = capture;
+			if (capture != null) to.chessPiece.loc = to;
+			loc = from;
 			loc.chessPiece = this;
-			return false;
+			if (player.king.isInCheck()){
+				return null;
+			}
 		}
 		
 		// valid
 		
 		if (commit){
 			moves++;
-		} else {
-			to.chessPiece = tempPiece;
-			if (tempPiece != null) to.chessPiece.loc = to;
-			loc = oldLoc;
-			loc.chessPiece = this;
 		}
 		
-		return true;
+		return new Move(this, capture, from, to);
 	}
 		
 	public boolean canMoveTo(Square to){
-		return canMoveTo(to, false);
+		return (canMoveTo(to, false) != null);
 	}
 	
-	public boolean tryMoveTo(Square to){
+	public Move tryMoveTo(Square to){
 		return canMoveTo(to, true);
 	}
 	

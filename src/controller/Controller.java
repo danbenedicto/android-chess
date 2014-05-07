@@ -55,7 +55,7 @@ public class Controller {
 			destination = clickedSquare;
 			destinationPiece = clickedSquare.chessPiece;
 			
-			if (game.currentPlayer == selected.player && selected.tryMoveTo(clickedSquare)){
+			if (game.currentPlayer == selected.player && selected.tryMoveTo(clickedSquare) != null){
 				// successful!
 				game.currentPlayer = game.currentPlayer.opponent;	// change turns
 				
@@ -84,7 +84,7 @@ public class Controller {
 			if (cp.loc == null) continue; 
 			for (Square[] row : game.board){
 				for (Square square : row){
-					if (cp.tryMoveTo(square)){
+					if (cp.tryMoveTo(square) != null){
 						view.printBoard();
 						game.currentPlayer = game.currentPlayer.opponent;
 						return;

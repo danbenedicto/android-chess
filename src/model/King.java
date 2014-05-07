@@ -36,60 +36,66 @@ public class King extends ChessPiece {
 	}
 
 	@Override
-	public boolean canMoveTo(Square to, boolean commit) {
+	public Move canMoveTo(Square to, boolean commit) {
 		if (loc.equals(to) || (to.chessPiece != null && player.equals(to.chessPiece.player))){
-			return false;
+			return null;
 		}
 		
 		if (!canMoveToHook(to)){
-			return false;
+			return null;
 		}
 		
-		int oldRookX = -1;
-		int newRookX = -1;
-		if (Math.abs(to.x - loc.x) == 2){
-			// let (rook == null) mean this is not a castle attempt. otherwise it is a castle attempt and rook is the involved rook
+		boolean castleAttempt = Math.abs(to.x - loc.x) == 2;
+		
+		Square rookFrom = null;
+		Square rookTo = null;
+		ChessPiece castlingRook = null;
+		
+		if (castleAttempt){
 			if (to.x == 6){
-				oldRookX = 7;
-				newRookX = 5;
+				rookFrom = board[7][loc.y];
+				rookTo = board[5][loc.y];
 			} else {
-				oldRookX = 0;
-				newRookX = 2;
+				rookFrom = board[0][loc.y];
+				rookTo = board[2][loc.y];
 			}
+			
+			castlingRook = rookFrom.chessPiece;
 		}
 		
-		// temporarily move to see if king is safe
-		Square oldLoc = this.loc;
-		oldLoc.chessPiece = null;
+		ChessPiece capture = to.chessPiece;
+		if (capture != null) capture.loc = null;	// consider any piece on the destination Square killed
 		
-		ChessPiece tempPiece = to.chessPiece;
-		if (tempPiece != null) tempPiece.loc = null;	// consider any "to" piece killed
-		
-		to.chessPiece = this;
+		// move king to the new location
+		Square from = this.loc;		// remember old location
+		from.chessPiece = null;		// take it off the old Square
+		to.chessPiece = this;		// put it on the new Square
 		this.loc = to;
 		
-		if (oldRookX != -1){
-			board[newRookX][loc.y].chessPiece = board[oldRookX][loc.y].chessPiece;
-			board[newRookX][loc.y].chessPiece.loc = board[newRookX][loc.y];
-			board[oldRookX][loc.y].chessPiece = null;
+		if (castleAttempt){
+			rookFrom.chessPiece = null;
+			rookTo.chessPiece = castlingRook;
+			castlingRook.loc = rookTo;
 		}
 		
 		boolean inCheck = isInCheck();
 		
 		if (inCheck || !commit){
 			// move would leave king in check, so invalid. restore old state
-			to.chessPiece = tempPiece;
-			if (tempPiece != null) to.chessPiece.loc = to;
-			loc = oldLoc;
+			to.chessPiece = capture;
+			if (capture != null) to.chessPiece.loc = to;
+			
+			loc = from;
 			loc.chessPiece = this;
-			if (oldRookX != -1){
-				board[oldRookX][loc.y].chessPiece = board[newRookX][loc.y].chessPiece;
-				board[oldRookX][loc.y].chessPiece.loc = board[oldRookX][loc.y];
-				board[newRookX][loc.y].chessPiece = null;
+			
+			if (castleAttempt){
+				rookFrom.chessPiece = castlingRook;
+				castlingRook.loc = rookFrom;
+				rookTo.chessPiece = null;
 			}
 			
 			if (inCheck){
-				return false;
+				return null;
 			}
 		}
 		
@@ -99,7 +105,11 @@ public class King extends ChessPiece {
 			moves++;
 		}
 		
-		return true;
+		if (castleAttempt){
+			return new Move(this, capture, from, to, Move.Type.CASTLE);
+		} else {
+			return new Move(this, capture, from, to);
+		}
 	}
 	
 	@Override
