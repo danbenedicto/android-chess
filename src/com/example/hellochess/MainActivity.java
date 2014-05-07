@@ -71,5 +71,9 @@ public class MainActivity extends ActionBarActivity {
 			return rootView;
 		}
 	}
+	
+	public void undoMove(View v){
+		controller.undoMove();
+	}
 
 }

@@ -17,5 +17,6 @@
     <string name="wQ">♕</string>
     <string name="wK">♔</string>
     <string name="wp">♙</string>
-
+	
+	<string name="undo_button">Undo</string> 
 </resources>
