@@ -17,6 +17,12 @@
     <string name="wQ">♕</string>
     <string name="wK">♔</string>
     <string name="wp">♙</string>
-	
-	<string name="undo_button">Undo</string> 
+    <string name="undo_button">Undo</string>
+    <string name="title_activity_main_page">MainPageActivity</string>
+    <string name="Play_Game">Play Game</string>
+    <string name="Playback_Game">Playback Game</string>
+    <string name="Record_Game">Record Game</string>
+    <string name="title_activity_record">RecordActivity</string>
+    <string name="title_activity_playback">PlaybackActivity</string>
+
 </resources>
