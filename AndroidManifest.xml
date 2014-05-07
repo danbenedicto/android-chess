@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.hellochess.activity_main_page"
+            android:name="com.example.hellochess.MainPageActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.hellochess.MainPageActivity"
+            android:name="com.example.hellochess.MainActivity"
             android:label="@string/title_activity_main_page" >
         </activity>
         <activity

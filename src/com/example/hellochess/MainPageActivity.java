@@ -16,7 +16,7 @@ public class MainPageActivity extends Activity {
 
 		playButton();
 		recordButton();
-
+		replayButton();
 	}
 
 	@Override
