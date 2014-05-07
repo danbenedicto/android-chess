@@ -37,7 +37,6 @@ public class AndroidView {
 	private TextView[][] textViews;
 	private Game game;
 	private HashMap<TextView, Square> viewSquares;
-	private HashMap<Square, TextView> squareViews;
 	
 	/**
 	 * Creates an AndroidView object that creates a visual experience for a chess game.
@@ -54,7 +53,6 @@ public class AndroidView {
 		this.textViews = new TextView[8][8];
 		
 		this.viewSquares = new HashMap<TextView, Square>();
-		this.squareViews = new HashMap<Square, TextView>();
 		
 		// an OnClickListener that all views will share
 		OnClickListener ocl = new OnClickListener() {
@@ -87,7 +85,6 @@ public class AndroidView {
 				
 				// store it in our HashMaps
 				viewSquares.put(textViews[x][y], game.board[x][y]);
-				squareViews.put(game.board[x][y], textViews[x][y]);
 			}
 		}
 	}
@@ -134,7 +131,7 @@ public class AndroidView {
 	 */
 	public void hintAt(Collection<Square> squares){
 		for (Square s : squares){
-			squareViews.get(s).setBackgroundColor(hintColor);
+			textViews[s.x][s.y].setBackgroundColor(hintColor);
 		}
 	}
 	
@@ -143,7 +140,7 @@ public class AndroidView {
 	 * @param selected
 	 */
 	public void highlight(Square selected){
-		squareViews.get(selected).setBackgroundColor(selectedColor);
+		textViews[selected.x][selected.y].setBackgroundColor(selectedColor);
 	}
 	
 	/**

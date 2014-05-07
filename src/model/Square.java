@@ -7,8 +7,8 @@ package model;
  */
 public class Square {
 	
-	int x;	// [0,8) ; rank
-	int y;	// [0,8) ; file
+	public int x;	// [0,8) ; rank
+	public int y;	// [0,8) ; file
 	
 	public ChessPiece chessPiece;	// the piece currently on this square
 
