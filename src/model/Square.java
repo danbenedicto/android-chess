@@ -1,11 +1,18 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author Dan Benedicto
  *
  */
-public class Square {
+public class Square implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	public int x;	// [0,8) ; rank
 	public int y;	// [0,8) ; file

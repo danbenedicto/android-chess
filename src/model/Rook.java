@@ -6,6 +6,11 @@ package model;
  *
  */
 public class Rook extends ChessPiece {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public boolean canMoveToHook(Square to) {
 		if (loc.x != to.x && loc.y != to.y) { 

@@ -7,6 +7,11 @@ package model;
  *
  */
 public class Bishop extends ChessPiece {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public boolean canMoveToHook(Square to) {
 		if (Math.abs(to.x - loc.x) != Math.abs(to.y - loc.y)) {

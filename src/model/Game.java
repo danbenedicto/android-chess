@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,13 @@ import java.util.List;
  * @author Dan Benedicto
  *
  */
-public class Game {
+public class Game implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	public Square[][] board;
 	public Player white;
 	public Player black;

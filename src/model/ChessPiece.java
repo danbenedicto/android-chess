@@ -1,12 +1,19 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author Dan Benedicto
  *
  */
-public abstract class ChessPiece {
+public abstract class ChessPiece implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Square[][] board;
 	
 	public Square loc;

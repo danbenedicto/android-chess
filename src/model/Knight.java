@@ -7,6 +7,11 @@ package model;
  */
 public class Knight extends ChessPiece {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public boolean canMoveToHook(Square to) {
 		int dx = Math.abs(to.x - loc.x);

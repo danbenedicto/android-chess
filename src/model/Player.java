@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,12 @@ import java.util.List;
  * @author Dan Benedicto
  *
  */
-public class Player {
+public class Player implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	public PlayerColor color;
 	public List<ChessPiece> pieces;

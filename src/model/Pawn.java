@@ -8,6 +8,11 @@ package model;
  */
 public class Pawn extends ChessPiece {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public boolean canMoveToHook(Square to) {
 		int dy = (player.color == PlayerColor.BLACK) ? 1 : -1;
