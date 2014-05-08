@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import model.Game;
 import model.Square;
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.view.Display;
@@ -32,7 +33,7 @@ public class AndroidView {
 	private static final int selectedColor = Color.CYAN;
 	
 	public Controller controller;
-	public MainActivity activity;
+	public Activity activity;
 	
 	private TextView[][] textViews;
 	private Game game;
@@ -45,7 +46,7 @@ public class AndroidView {
 	 * @param controller The controller related to this object.
 	 * @param gridLayout The GridLayout to fill with TextViews	
 	 */
-	public AndroidView(MainActivity activity, Controller controller, Game game, GridLayout boardGridLayout){
+	public AndroidView(Activity activity, Controller controller, Game game, GridLayout boardGridLayout){
 		this.activity = activity;
 		this.controller = controller;		
 		this.game = game;
@@ -156,5 +157,17 @@ public class AndroidView {
 	public void printCheck(){
 		Toast toast = Toast.makeText(activity.getApplicationContext(), "ayy", Toast.LENGTH_SHORT);
 		toast.show();
+	}
+	
+	public String printCheckmate(){
+		Toast toast = Toast.makeText(activity.getApplicationContext(), "Checkmate!", Toast.LENGTH_SHORT);
+		toast.show();
+		return "hello";
+	}
+	
+	public String printStalemate(){
+		Toast toast = Toast.makeText(activity.getApplicationContext(), "Stalemate", Toast.LENGTH_SHORT);
+		toast.show();
+		return "goodbye";
 	}
 }
