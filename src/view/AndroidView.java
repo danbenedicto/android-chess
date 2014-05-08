@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import model.Game;
+import model.Player;
+import model.PlayerColor;
 import model.Square;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,12 +16,12 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.hellochess.MainActivity;
 import com.example.hellochess.R;
 
 import controller.Controller;
@@ -163,39 +165,59 @@ public class AndroidView {
 		toast.show();
 	}
 	
-	public String printCheckmate(){
-		Toast toast = Toast.makeText(activity.getApplicationContext(), "Checkmate!", Toast.LENGTH_SHORT);
-		toast.show();
-		
-		
-		final EditText txtUrl = new EditText(activity);
-
-		// Set the default text to a link of the Queen
-		txtUrl.setHint("http://www.librarising.com/astrology/celebs/images2/QR/queenelizabethii.jpg");
-		
-		new AlertDialog.Builder(activity)
-		  .setTitle("Moustachify Link")
-		  .setMessage("Paste in the link of an image to moustachify!")
-		  .setView(txtUrl)
-		  .setPositiveButton("Moustachify", new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int whichButton) {
-		      String url = txtUrl.getText().toString();
-		    
-		    
-		    }
-		  })
-		  .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int whichButton) {
-		    }
-		  })
-		  .show(); 
-		return txtUrl.getText().toString();
+	public void printResign(){
+		printResult(game.currentPlayer.opponent, "forfeit");
 	}
 	
-	public String printStalemate(){
-		Toast toast = Toast.makeText(activity.getApplicationContext(), "Stalemate", Toast.LENGTH_SHORT);
-		toast.show();
+	public void printDraw(){
+		printResult(null, "");
+	}
+	
+	public void printCheckmate(){
+		printResult(game.currentPlayer.opponent, "checkmate");
+	}
+	
+	public void printStalemate(){
+		printResult(game.currentPlayer.opponent, "stalemate");
+	}
+	
+	public void printResult(Player winner, String outcome){
+		
+		String result;
+		
+		if (winner == null){
+			result = "Draw!";
+		} else {
+			String playerName = (winner.color == PlayerColor.BLACK) ? "Black" : "White"; 
+			result = playerName + " wins by " + outcome + "!";
+		}
+		
+		final EditText nameField = new EditText(activity);
 
-		return "goodbye";
+		// Set the default text to a link of the Queen
+		nameField.setHint("name");
+		
+		new AlertDialog.Builder(activity)
+		.setTitle(result)
+		.setMessage("Enter a name to save this game:")
+		.setView(nameField)
+		.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String url = nameField.getText().toString();
+				AndroidView.this.game.name = url;
+				AndroidView.this.controller.save();
+			}
+		})
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+
+			}
+		})
+		.show(); 
+	}
+	
+	public void setUndoEnabled(boolean enabled){
+		Button b = (Button) activity.findViewById(R.id.button1);
+		b.setEnabled(enabled);
 	}
 }

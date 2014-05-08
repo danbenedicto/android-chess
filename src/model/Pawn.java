@@ -18,7 +18,7 @@ public class Pawn extends ChessPiece {
 		int dy = (player.color == PlayerColor.BLACK) ? 1 : -1;
 		if (loc.x == to.x){
 			// trying to move vertically
-			return (to.chessPiece == null && (to.y == loc.y + dy || ((moves == 0) && (to.y == loc.y + 2*dy))));
+			return (to.chessPiece == null && (to.y == loc.y + dy || ((moves == 0) && (to.y == loc.y + 2*dy) && (board[loc.x][loc.y + dy].chessPiece == null))));
 		}
 
 		if (Math.abs(to.x - loc.x) == 1 && (to.y == loc.y + dy)){

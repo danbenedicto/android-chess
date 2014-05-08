@@ -14,16 +14,9 @@
 
     <Button
         android:id="@+id/button3"
-    android:layout_width="match_parent"
+    	android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.05"
         android:text="@string/Playback_Game" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.05"
-        android:text="@string/Record_Game" />
 
 </LinearLayout>

@@ -1,7 +1,9 @@
 package model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +24,9 @@ public class Game implements Serializable {
 	public Player currentPlayer;
 	public List<Move> moves;
 	
+	public String name;
+	public Date date;
+	
 	/**
 	 * Creates a Game object with a board containing chess pieces, a white and a black player, and current player equal to white.
 	 */
@@ -32,8 +37,10 @@ public class Game implements Serializable {
 		this.white.opponent = black;
 		this.black.opponent = white;
 		this.currentPlayer = white;	// white goes first
+		this.moves = new ArrayList<Move>();
 		
-		moves = new ArrayList<Move>();
+		this.name = "";
+		this.date = new Date();
 		
 		// initialize the board with piece-less squares
 		for (int r = 0; r < 8; r++){
@@ -87,5 +94,9 @@ public class Game implements Serializable {
 			pawn.player = p;
 			p.pieces.add(pawn);
 		}
+	}
+	
+	public String toString(){
+		return this.name + " (" + DateFormat.getDateInstance().format(this.date) + ")";
 	}
 }

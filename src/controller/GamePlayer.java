@@ -5,23 +5,28 @@ import model.Game;
 import model.Move;
 import view.AndroidView;
 
-public class GamePlayer {
+import com.example.hellochess.PlaybackActivity;
 
-	private Game game;
-	private AndroidView view;
+public class GamePlayer extends Controller {
 	
+	private PlaybackActivity activity;
 	private int currentFrame;
 	
-	public GamePlayer(Game game, AndroidView view){
-		this.game = game;
-		this.view = view;
-		this.currentFrame = 0;
+	public GamePlayer(PlaybackActivity activity, Game game, AndroidView view){
+		super(game, view);
+		this.activity = activity;
+		this.currentFrame = game.moves.size() - 1;
+		System.out.println("current frame: " + currentFrame);
+		while (canGoBackward()){
+			goBackward();
+			System.out.println("rewind");
+		}
 	}
 	
 	public void goForward(){
 		if (!canGoForward()) return;
 		
-		Move move = game.moves.get(currentFrame++);
+		Move move = game.moves.get(++currentFrame);
 		
 		if (move.capture != null){
 			move.capture.loc.chessPiece = null;
@@ -38,6 +43,8 @@ public class GamePlayer {
 			rook.loc.chessPiece = rook;
 		}
 		
+		activity.setForwardButtonEnabled(canGoForward());
+		activity.setBackButtonEnabled(canGoBackward());
 		view.printBoard();
 	}
 	
@@ -69,6 +76,9 @@ public class GamePlayer {
 			move.capture.loc.chessPiece = move.capture;
 		}
 		
+		activity.setForwardButtonEnabled(canGoForward());
+		activity.setBackButtonEnabled(canGoBackward());
+		
 		view.printBoard();
 	}
 	
@@ -77,6 +87,6 @@ public class GamePlayer {
 	}
 	
 	public boolean canGoBackward(){
-		return (currentFrame > 0);
+		return (currentFrame >= 0);
 	}
 }

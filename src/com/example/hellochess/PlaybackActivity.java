@@ -1,7 +1,8 @@
 package com.example.hellochess;
 
+import model.Game;
+import view.AndroidView;
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,19 +10,52 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.Button;
+import android.widget.GridLayout;
+import controller.Controller;
+import controller.GamePlayer;
 
 public class PlaybackActivity extends Activity {
+	
+	Game game;
+	Controller controller;
+	AndroidView view;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playback);
-
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+		
+		Bundle b = this.getIntent().getExtras();
+		if (b != null) {
+		    game = (Game) b.getSerializable("GAME");
 		}
+		
+		GridLayout chessGrid = (GridLayout) findViewById(R.id.BoardGridLayout2);
+		
+		this.view = new AndroidView(this, null, game, chessGrid);
+		this.controller = new GamePlayer(this, game, this.view);
+		this.view.controller = this.controller;
+		
+		Button button = (Button) findViewById(R.id.backButton);
+		button.setEnabled(false);
+		
+		for (int i = 0; i < chessGrid.getChildCount(); i++){
+			chessGrid.getChildAt(i).setOnClickListener(null);
+		}
+		
+		view.printBoard();
+	}
+	
+	public void setBackButtonEnabled(boolean enabled){
+		Button button = (Button) findViewById(R.id.backButton);
+		button.setEnabled(enabled);
+	}
+	
+	public void setForwardButtonEnabled(boolean enabled){
+		Button button = (Button) findViewById(R.id.forwardButton);
+		button.setEnabled(enabled);
 	}
 
 	@Override
@@ -59,6 +93,16 @@ public class PlaybackActivity extends Activity {
 					container, false);
 			return rootView;
 		}
+	}
+	
+	public void goForward(View view){
+		((GamePlayer) controller).goForward();
+		this.view.printBoard();
+	}
+	
+	public void goBackward(View view){
+		((GamePlayer) controller).goBackward();
+		this.view.printBoard();
 	}
 
 }

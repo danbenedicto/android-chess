@@ -15,7 +15,7 @@ public class MainPageActivity extends Activity {
 		setContentView(R.layout.activity_main_page);
 
 		playButton();
-		recordButton();
+		replayButton();
 
 	}
 
@@ -38,25 +38,13 @@ public class MainPageActivity extends Activity {
 		});
 		
 	}
-	public void recordButton(){
-		Button message = (Button) findViewById(R.id.button2);
-		message.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(MainPageActivity.this,RecordActivity.class));
-				
-			}
-		});
-		
-	}
 	public void replayButton(){
 		Button message = (Button) findViewById(R.id.button3);
 		message.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(MainPageActivity.this,PlaybackActivity.class));
+				startActivity(new Intent(MainPageActivity.this,ListGames.class));
 				
 			}
 		});

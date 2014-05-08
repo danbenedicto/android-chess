@@ -1,8 +1,37 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hellochess.PlaybackActivity"
-    tools:ignore="MergeRootFrame" />
-
+    android:orientation="vertical">
+	    
+	    <GridLayout
+		    android:id="@+id/BoardGridLayout2"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:columnCount="8"
+		    android:rowCount="8"
+		    tools:context=".GridXMLActivity" >
+		</GridLayout>
+		
+	    <LinearLayout
+	        android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal">
+		    <Button
+		        android:id="@+id/backButton"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/back_button"
+		        android:onClick="goBackward"
+		         />
+		    <Button
+		        android:id="@+id/forwardButton"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/forward_button"
+		        android:onClick="goForward"
+		         />
+	    </LinearLayout>
+		
+</LinearLayout>

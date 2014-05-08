@@ -1,6 +1,12 @@
 package controller;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import model.ChessPiece;
@@ -8,6 +14,8 @@ import model.Game;
 import model.Move;
 import model.Square;
 import view.AndroidView;
+import android.content.Context;
+import android.widget.Toast;
 
 /**
  * 
@@ -55,8 +63,20 @@ public class Controller {
 				game.moves.add(move);	// record the move
 				game.currentPlayer = game.currentPlayer.opponent;	// change turns
 				
-				if (game.currentPlayer.king.isInCheck()){
-					view.printCheck();
+				boolean inCheck = game.currentPlayer.king.isInCheck();
+				
+				view.setUndoEnabled(true);
+					
+				if (anyMoves()){
+					if (inCheck){
+						view.printCheck();
+					}
+				}else{
+					if (inCheck){
+						view.printCheckmate();
+					} else {
+						view.printStalemate();
+					}
 				}
 				
 			} else {
@@ -69,18 +89,36 @@ public class Controller {
 		view.printBoard();
 	}
 	
+	public boolean anyMoves(){
+		for (ChessPiece cp: game.currentPlayer.pieces){
+			if (cp.loc == null) continue;
+			if (getPossibleMoves(cp).size() > 0){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Attempts to make a move for the player whose turn it is.
 	 */
 	public void autoMove(){
 		
-		// to do: make this more random
+		List<ChessPiece> tempPieces = new ArrayList<ChessPiece>(16);
+		for (ChessPiece cp: game.currentPlayer.pieces){
+			tempPieces.add(cp);
+		}
+		Collections.shuffle(tempPieces);
 		
-		for (ChessPiece cp : game.currentPlayer.pieces){
-			if (cp.loc == null) continue; 
-			for (Square[] row : game.board){
-				for (Square square : row){
-					if (cp.tryMoveTo(square) != null){
+		for (ChessPiece cp: tempPieces){
+			if (cp.loc != null){
+				List<Square> moves = getPossibleMoves(cp);
+				if (moves.size() > 0){
+					Move move;
+					int rand = (int) (Math.random() * moves.size());
+					if ((move = cp.tryMoveTo(moves.get(rand))) != null){
+						game.moves.add(move);
 						view.printBoard();
 						game.currentPlayer = game.currentPlayer.opponent;
 						return;
@@ -145,6 +183,43 @@ public class Controller {
 		
 		game.currentPlayer = game.currentPlayer.opponent;
 		
+		view.setUndoEnabled(false);
+		
 		view.printBoard();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void save(){
+		List<Game> games = null;
+		try {
+			FileInputStream fis = view.activity.openFileInput("games.bin");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			games = (List<Game>) ois.readObject();
+			fis.close();
+			ois.close();
+		} catch (Exception e){
+			games = new ArrayList<Game>();
+		}
+		
+		if (games == null){
+			games = new ArrayList<Game>();
+		}
+		
+		games.add(game);
+		
+		try {
+			FileOutputStream fileOut = view.activity.openFileOutput("games.bin", Context.MODE_PRIVATE);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(games);
+			out.close();
+			fileOut.close();
+			System.out.println("Serialized data is saved in games.bin");
+			Toast toast = Toast.makeText(view.activity, "Game successfully saved.", Toast.LENGTH_SHORT);
+			toast.show();
+		} catch(IOException i) {
+			Toast toast = Toast.makeText(view.activity, "Error saving game.", Toast.LENGTH_SHORT);
+			toast.show();
+			System.out.println(i.getMessage());
+		}
 	}
 }
