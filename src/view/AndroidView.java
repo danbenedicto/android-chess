@@ -6,17 +6,21 @@ import java.util.HashMap;
 import model.Game;
 import model.Square;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hellochess.MainActivity;
+import com.example.hellochess.R;
 
 import controller.Controller;
 
@@ -162,12 +166,36 @@ public class AndroidView {
 	public String printCheckmate(){
 		Toast toast = Toast.makeText(activity.getApplicationContext(), "Checkmate!", Toast.LENGTH_SHORT);
 		toast.show();
-		return "hello";
+		
+		
+		final EditText txtUrl = new EditText(activity);
+
+		// Set the default text to a link of the Queen
+		txtUrl.setHint("http://www.librarising.com/astrology/celebs/images2/QR/queenelizabethii.jpg");
+		
+		new AlertDialog.Builder(activity)
+		  .setTitle("Moustachify Link")
+		  .setMessage("Paste in the link of an image to moustachify!")
+		  .setView(txtUrl)
+		  .setPositiveButton("Moustachify", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int whichButton) {
+		      String url = txtUrl.getText().toString();
+		    
+		    
+		    }
+		  })
+		  .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int whichButton) {
+		    }
+		  })
+		  .show(); 
+		return txtUrl.getText().toString();
 	}
 	
 	public String printStalemate(){
 		Toast toast = Toast.makeText(activity.getApplicationContext(), "Stalemate", Toast.LENGTH_SHORT);
 		toast.show();
+
 		return "goodbye";
 	}
 }

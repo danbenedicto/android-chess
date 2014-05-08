@@ -19,7 +19,7 @@ import android.widget.Toast;
 import controller.Controller;
 
 public class MainActivity extends ActionBarActivity {
-	
+
 	Game game;
 	Controller controller;
 	AndroidView view;
@@ -28,18 +28,18 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		GridLayout chessGrid = (GridLayout) findViewById(R.id.BoardGridLayout);
-		
+
 		this.game = new Game();
 		this.view = new AndroidView(this, null, game, chessGrid);
 		this.controller = new Controller(game, this.view);
 		this.view.controller = this.controller;
-		
+
 		view.printBoard();
 		ressignButton();
 		drawButton();
-		
+
 	}
 
 	@Override
@@ -78,14 +78,14 @@ public class MainActivity extends ActionBarActivity {
 			return rootView;
 		}
 	}
-	
+
 	public void undoMove(View v){
 		controller.undoMove();
 	}
 	public void drawButton(){
 		Button message = (Button) findViewById(R.id.button2);
 		message.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				CharSequence text="Do you want to draw?";
@@ -95,45 +95,46 @@ public class MainActivity extends ActionBarActivity {
 				toast.show();	
 				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-			    builder.setTitle("Confirm");
-			    builder.setMessage("Are you sure?");
+				builder.setTitle("Confirm");
+				builder.setMessage("Are you sure?");
 
-			    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-			        public void onClick(DialogInterface dialog, int which) {
-			        	GridLayout chessGrid = (GridLayout) findViewById(R.id.BoardGridLayout);
+				builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						GridLayout chessGrid = (GridLayout) findViewById(R.id.BoardGridLayout);
 						chessGrid.removeAllViews();	MainActivity.this.game = new Game();
 						MainActivity.this.view = new AndroidView(MainActivity.this, null, game, chessGrid);
-					
+
 						MainActivity.this.controller = new Controller(game, MainActivity.this.view);
 						MainActivity.this.view.controller = MainActivity.this.controller;
 						view.printBoard();
-			        	
 
-			            dialog.dismiss();
-			        }
 
-			    });
+						dialog.dismiss();
+					}
 
-			    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+				});
 
-			        @Override
-			        public void onClick(DialogInterface dialog, int which) {
-			            // Do nothing
-			            dialog.dismiss();
-			        }
-			    });
+				builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
-			    AlertDialog alert = builder.create();
-			    alert.show();
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// Do nothing
+						dialog.dismiss();
+					}
+				});
+
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		});
-		
+
 	}
 	public void ressignButton(){
 		Button message = (Button) findViewById(R.id.button3);
 		message.setOnClickListener(new View.OnClickListener() {
-		
+
 
 			@Override
 			public void onClick(View v) {
@@ -150,17 +151,21 @@ public class MainActivity extends ActionBarActivity {
 				GridLayout chessGrid = (GridLayout) findViewById(R.id.BoardGridLayout);
 				chessGrid.removeAllViews();	MainActivity.this.game = new Game();
 				MainActivity.this.view = new AndroidView(MainActivity.this, null, game, chessGrid);
-			
+
 				MainActivity.this.controller = new Controller(game, MainActivity.this.view);
 				MainActivity.this.view.controller = MainActivity.this.controller;
 				view.printBoard();
-				
+
 
 			}
-			
-		}
-		);
+
+		});
 
 	}
 
+		
+			
+		
 }
+
+
