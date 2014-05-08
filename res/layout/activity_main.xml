@@ -15,22 +15,43 @@
 		</GridLayout>
 
 	    <LinearLayout
-	        android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:orientation="horizontal">
+	        android:layout_width="868dp"
+	        android:layout_height="720dp"
+	        android:orientation="horizontal" 
+	      >
+
 		    <Button
 		        android:id="@+id/button1"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="@string/undo_button"
+		        android:background="?android:attr/selectableItemBackground"
 		        android:onClick="undoMove"
+		   
+		
 		         />
 		    <Button
 		        android:id="@+id/button2"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@string/undo_button"
-		        android:onClick="undoMove"
+		        android:text="@string/draw"
+		        android:background="?android:attr/selectableItemBackground"
+		      
+		         />
+		        <Button
+		        android:id="@+id/button3"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/resign"
+		       android:background="?android:attr/selectableItemBackground"
+		         />
+		            <Button
+		        android:id="@+id/button4"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/AI"
+		        android:background="?android:attr/selectableItemBackground"
+		       
 		         />
 	    </LinearLayout>
 		

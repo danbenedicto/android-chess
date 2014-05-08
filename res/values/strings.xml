@@ -24,5 +24,9 @@
     <string name="Record_Game">Record Game</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_playback">PlaybackActivity</string>
+    <string name="AI">AI</string>
+    <string name="undoMove">Undo</string>
+    <string name="resign">Resign</string>
+    <string name="draw">Draw</string>
 
 </resources>
